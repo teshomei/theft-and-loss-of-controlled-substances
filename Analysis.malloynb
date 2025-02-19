@@ -1,6 +1,6 @@
 >>>malloy
 source: cql is duckdb.table('./chem-quantity-lost.csv')extend{
-    
+    dimension: lossyear is replace(period,"JAN-SEP ", '') 
 }
 >>>malloy
 source: ctxbl is duckdb.table('./chem-thefts-by-business-and-loss-type.csv')extend{
@@ -298,16 +298,88 @@ run: CSql ->{
 }
 >>>markdown
 23. What year had the most controlled substance loss instances?
+*provided data included only 2047 rows per year
 >>>malloy
---# line_chart
+# line_chart
 run: CSql ->{
-    group_by: period
-    aggregate: 
+    group_by: lossyear
+    aggregate: instances is count()
 }
 >>>markdown
 24. What year had the most chemical loss instances?
+*provided data included only 2047 rows per year
 >>>malloy
-run: csql ->{
+run: cql ->{
     aggregate: instances is count()
     group_by: lossyear
+}
+>>>markdown
+25. How did controlled substance loss by business activity trend over the years?
+>>>malloy
+run: CSql ->{
+    group_by: business_activity
+    # line_chart
+    nest: byyear is{
+        group_by: lossyear
+        aggregate: instances is count()
+    }   
+}
+>>>markdown
+26. How did chemicals loss by business activity trend over the years?
+>>>malloy
+run: cql ->{
+    group_by: business_activity
+    # line_chart
+    nest: byyear is{
+        group_by: lossyear
+        aggregate: instances is count()
+    }   
+}
+>>>markdown
+27. How did controlled substance loss by loss type trend over the years?
+>>>malloy
+run: CSql ->{
+    group_by: loss_type
+    # line_chart
+    nest: byyear is{
+        group_by: lossyear
+        aggregate: instances is count()
+    }   
+}
+>>>markdown
+28. How did chemical loss by loss type trend over the years?
+>>>malloy
+run: cql ->{
+    group_by: loss_type
+    # line_chart
+    nest: byyear is{
+        group_by: lossyear
+        aggregate: instances is count()
+    }   
+}
+>>>markdown
+29. What was the largest single loss of controlled substance per year?
+>>>malloy
+run: CSql ->{
+    group_by:lossyear
+    nest: bylosstype is{
+        select:loss_type
+        select:unit
+        select: business_activity
+        order_by: unit desc
+        limit:1 
+    }
+}
+>>>markdown
+30. What was the largest single loss of chemicals per year?
+>>>malloy
+run: cql ->{
+    group_by:lossyear
+    nest: bylosstype is{
+        select:loss_type
+        select:unit
+        select: business_activity
+        order_by: unit desc
+        limit:1 
+    }
 }
