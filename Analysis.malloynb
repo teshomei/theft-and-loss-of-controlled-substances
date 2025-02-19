@@ -1,0 +1,313 @@
+>>>malloy
+source: cql is duckdb.table('./chem-quantity-lost.csv')extend{
+    
+}
+>>>malloy
+source: ctxbl is duckdb.table('./chem-thefts-by-business-and-loss-type.csv')extend{
+
+}
+>>>malloy
+source: ctxsb is duckdb.table('./chem-thefts-by-state-and-business.csv')extend{
+    
+}
+>>>malloy
+source: ctxsl is duckdb.table('./chem-thefts-by-state-and-loss-type.csv')extend{
+    
+}
+>>>malloy
+source: CSql is duckdb.table('./csub-quantity-lost.csv')extend{
+    dimension: lossyear is replace(period,"JAN-SEP ", '') 
+}
+>>>malloy
+source: CStxbl is duckdb.table('./csub-thefts-by-business-and-loss-type.csv')extend{
+    
+}
+>>>malloy
+source: CStxsb is duckdb.table('./csub-thefts-by-state-and-business.csv')extend{
+    
+}
+>>>malloy
+source: CStxsl is duckdb.table('./csub-thefts-by-state-and-loss-type.csv')
+>>>malloy
+run:cql ->{
+    group_by: loss_type
+    aggregate: total is sum(unit)
+    order_by: total desc
+    nest: bysubstance is {
+        group_by: state
+        aggregate: unittotals is sum(unit)
+        aggregate: miltotal is sum(milliliter)
+        order_by: unittotals desc
+    }
+}
+>>>markdown
+1. How much control substance  was lost in Washington State?
+>>>malloy
+run: CSql ->{
+    where: state = "WA"
+    aggregate: totalmill is sum(milliliter)
+    aggregate: totalunit is sum(unit)
+    aggregate: totalgram is sum(gram)
+    aggregate: totalmgram is sum(milligram)
+}
+>>>markdown
+2. Which state had the most lost controlled substance?
+>>>malloy
+run: CSql ->{
+    group_by: state
+    aggregate: totalmill is sum(milliliter)
+    aggregate: totalunit is sum(unit)
+    aggregate: totalgram is sum(gram)
+    aggregate: totalmgram is sum(milligram)
+    order_by: totalunit desc
+}
+>>>markdown
+3. How much controlled substance was lost by business activity?
+>>>malloy
+run: CSql ->{
+    group_by: business_activity
+    aggregate: totalmill is sum(milliliter)
+    aggregate: totalunit is sum(unit)
+    aggregate: totalgram is sum(gram)
+    aggregate: totalmgram is sum(milligram)
+    order_by: totalunit desc
+}
+>>>markdown
+4. which business type of controlled substance loss was most common per state?
+>>>malloy
+run: CSql ->{
+    group_by: state
+    nest: bylosstype is{
+        group_by: loss_type
+        aggregate: totalmill is sum(milliliter)
+        aggregate: totalunit is sum(unit)
+        aggregate: totalgram is sum(gram)
+        aggregate: totalmgram is sum(milligram)
+        order_by: totalunit desc
+    }
+}
+>>>markdown
+5. What is the most common loss type for controlled substances?
+>>>malloy
+run: CSql ->{
+    group_by: loss_type
+    aggregate: losses is count()
+    order_by: losses desc
+}
+>>>markdown
+6. What is the most common controlled substance loss type by state?
+>>>malloy
+run: CSql ->{
+    group_by: state
+    nest: bystate is{
+        group_by: loss_type
+        aggregate: losses is count()
+        order_by: losses desc
+    }
+}
+>>>markdown
+7. What state loses the most controlled substance by theft?
+>>>malloy
+run: CSql ->{
+    group_by: state
+    nest: bylosstype is{
+        where: loss_type = "EMPLOYEE THEFT (OR SUSPECTED)" or loss_type = "BREAK-IN/BURGLARY"
+        group_by: loss_type
+        aggregate: totalmill is sum(milliliter)
+        aggregate: totalunit is sum(unit)
+        aggregate: totalgram is sum(gram)
+        aggregate: totalmgram is sum(milligram)
+        order_by: totalunit desc
+        limit:2
+    }
+}
+>>>markdown
+8. What state has the most controlled substance thefts?
+>>>malloy
+run: CSql ->{
+    group_by: state
+    aggregate: totalunit is sum(unit){where: loss_type = "EMPLOYEE THEFT (OR SUSPECTED)" or loss_type = "BREAK-IN/BURGLARY"}
+    order_by: totalunit desc
+    nest: bylosstype is{
+        where: loss_type = "EMPLOYEE THEFT (OR SUSPECTED)" or loss_type = "BREAK-IN/BURGLARY"
+        group_by: loss_type
+        aggregate: totalmill is sum(milliliter)
+        aggregate: totalunit is sum(unit)
+        aggregate: totalgram is sum(gram)
+        aggregate: totalmgram is sum(milligram)
+        order_by: totalunit desc
+        limit:2
+    }
+}
+>>>markdown
+9. What is the single largest controlled substance loss?
+>>>malloy
+run: CSql ->{
+    select: loss_type
+    select: unit
+    select: state
+    select: business_activity
+    order_by: unit desc
+}
+>>>markdown
+10. Where is hijacking the most common for loss of controlled substances?
+>>>malloy
+run: CSql ->{
+    where: loss_type = "HIJACKING OF TRANSPORT VEHICLE"
+    group_by: state
+    nest: bystate is{
+        group_by: loss_type 
+        aggregate: losses is count()
+        order_by: losses desc
+    }
+}
+>>>markdown
+11. How much chemicals was lost in Washington State?
+>>>malloy
+run: cql ->{
+    where: state = "WA"
+    aggregate: totalmill is sum(milliliter)
+    aggregate: totalunit is sum(unit)
+}
+>>>markdown
+12.Which state had the most lost chemicals?
+>>>malloy
+run: cql ->{
+    group_by: state
+    aggregate: totalmill is sum(milliliter)
+    aggregate: totalunit is sum(unit)
+    order_by: totalunit desc
+}
+>>>markdown
+13. How much chemicals was lost by business activity?
+>>>malloy
+run: cql ->{
+    group_by: business_activity
+    aggregate: totalmill is sum(milliliter)
+    aggregate: totalunit is sum(unit)
+    order_by: totalunit desc
+}
+>>>markdown
+14.which business type of chemical loss was most common per s
+>>>malloy
+run: cql ->{
+    group_by: state
+    nest: bylosstype is{
+        group_by: loss_type
+        aggregate: totalmill is sum(milliliter)
+        aggregate: totalunit is sum(unit)
+        order_by: totalunit desc
+    }
+}
+>>>markdown
+15. What is the most common loss type for chemicals?
+>>>malloy
+run: cql ->{
+    group_by: loss_type
+    aggregate: losses is count()
+    order_by: losses desc
+}
+>>>markdown
+16. What is the most common chemicals loss type by state?
+>>>malloy
+run: cql ->{
+    group_by: state
+    nest: bystate is{
+        group_by: loss_type
+        aggregate: losses is count()
+        order_by: losses desc
+    }
+}
+>>>markdown
+17. What state loses the most chemicals by theft?
+>>>malloy
+run: cql ->{
+    group_by: state
+    nest: bylosstype is{
+        where: loss_type = "EMPLOYEE THEFT (OR SUSPECTED)" or loss_type = "BREAK-IN/BURGLARY"
+        group_by: loss_type
+        aggregate: totalmill is sum(milliliter)
+        aggregate: totalunit is sum(unit)
+        order_by: totalunit desc
+        limit:2
+    }
+}
+>>>markdown
+18. What state has the most chemical thefts?
+>>>malloy
+run: cql ->{
+    group_by: state
+    aggregate: totalunit is sum(unit){where: loss_type = "EMPLOYEE THEFT (OR SUSPECTED)" or loss_type = "BREAK-IN/BURGLARY"}
+    order_by: totalunit desc
+    nest: bylosstype is{
+        where: loss_type = "EMPLOYEE THEFT (OR SUSPECTED)" or loss_type = "BREAK-IN/BURGLARY"
+        group_by: loss_type
+        aggregate: totalmill is sum(milliliter)
+        aggregate: totalunit is sum(unit)
+        order_by: totalunit desc
+        limit:2
+    }
+}
+>>>markdown
+19. What is the single largest chemical loss?
+>>>malloy
+run: cql ->{
+    select: loss_type
+    select: unit
+    select: state
+    select: business_activity
+    order_by: unit desc
+}
+>>>markdown
+20. Where is hijacking the most common for loss of chemicals?
+>>>malloy
+run: cql ->{
+    where: loss_type = "HIJACKING OF TRANSPORT VEHICLE"
+    group_by: state
+    nest: bystate is{
+        group_by: loss_type 
+        aggregate: losses is count()
+        order_by: losses desc
+    }
+}
+>>>markdown
+21. What are the largest single losses of chemical by loss type by state?
+>>>malloy
+run: cql ->{
+    group_by:state
+    nest: bylosstype is{
+        select:loss_type
+        select:unit
+        select: business_activity
+        order_by: unit desc
+        limit:1 
+    }
+}
+>>>markdown
+22. What are the largest single losses of controlled substance by loss type?
+>>>malloy
+run: CSql ->{
+    group_by:state
+    nest: bylosstype is{
+        select:loss_type
+        select:unit
+        select: business_activity
+        order_by: unit desc
+        limit:1 
+    }
+}
+>>>markdown
+23. What year had the most controlled substance loss instances?
+>>>malloy
+--# line_chart
+run: CSql ->{
+    group_by: period
+    aggregate: 
+}
+>>>markdown
+24. What year had the most chemical loss instances?
+>>>malloy
+run: csql ->{
+    aggregate: instances is count()
+    group_by: lossyear
+}
