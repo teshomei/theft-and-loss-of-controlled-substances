@@ -1,6 +1,4 @@
-This project uses [Malloy](https://www.malloydata.dev/) Data Analysis tools to evaluate data provided by [The Data Liberation Project](https://www.data-liberation-project.org/). Providing this data via [Github](https://github.com/) enables others to run their own analysis on the data to come to their own conclusions
-
-
+This project uses [Malloy](https://www.malloydata.dev/) Data Analysis tools to evaluate data provided by [The Data Liberation Project](https://www.data-liberation-project.org/). Providing this data via [Github](https://github.com/) enables others to run their own analysis on the data to come to their own conclusions. 
 
 ## Findings from the data
 Through analysis that includes using group by and aggregate functions amongst others, I was able to navigate the data and answer interesting questions that often led to more interesting questions. I will walk you through some of the more interesting information I uncovered.
