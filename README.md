@@ -1,3 +1,6 @@
+# Analysis of Theft and Loss of Controlled Substances data
+
+
 This project uses [Malloy](https://www.malloydata.dev/) Data Analysis tools to evaluate data provided by [The Data Liberation Project](https://www.data-liberation-project.org/). Providing this data via [Github](https://github.com/) enables others to run their own analysis on the data to come to their own conclusions. 
 
 ## Findings from the data
@@ -29,3 +32,8 @@ See images below for direction references:
 | `Step 3 - Click Trust` | <img src="step3.png" width="50%"> |
 | `Step 4 - Click a .malloynb file` | <img src="step4.png" width="50%"> |
 | `Step 5 - Press Run` | <img src="step5.png" width="50%"> |
+
+## Acknowledgements
+
+#### Thank you to The Data Liberation Project for sourcing and providing the data that made this analysis possible
+#### Thank you to Gonzaga University for including this work through our data science course
