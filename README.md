@@ -13,6 +13,13 @@ Through analysis that includes using group by and aggregate functions amongst ot
 #### 2. What states lost the most chemicals 
 <img width="481" alt="Screenshot 2025-03-06 at 7 35 04 PM" src="https://github.com/user-attachments/assets/a1730e5a-b423-4549-9cc7-3bbbada6185b" />
 
+#### 3. What was the largest single loss of chemicals per year?
+<img width="467" alt="Screenshot 2025-03-06 at 7 48 20 PM" src="https://github.com/user-attachments/assets/d354a29a-f53e-442e-9220-e473f8273979" />
+
+#### 4. What were the largest single losses by business activity 
+<img width="458" alt="Screenshot 2025-03-06 at 7 50 03 PM" src="https://github.com/user-attachments/assets/6064fce5-7c78-4a9a-8ae5-bcb7186254cb" />
+
+
 ## Directions on How to Use GitHub Web Editor
 
 Are you logged into github? Just press the period key right now. This will load the web editor. Then install the Malloy extension. Feel free to explore, experiment, and learn more about Peace Corps Volunteers!
