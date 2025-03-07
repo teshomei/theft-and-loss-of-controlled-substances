@@ -20,6 +20,10 @@ Through analysis that includes using group by and aggregate functions amongst ot
 #### 4. What were the largest single losses by business activity 
 <img width="458" alt="Screenshot 2025-03-06 at 7 50 03 PM" src="https://github.com/user-attachments/assets/6064fce5-7c78-4a9a-8ae5-bcb7186254cb" />
 
+#### 5. What is the single largest chemical loss?
+<img width="459" alt="Screenshot 2025-03-06 at 8 05 45 PM" src="https://github.com/user-attachments/assets/213f1b6e-ec14-46e5-b26b-811dbeb99e55" />
+
+
 
 ## Directions on How to Use GitHub Web Editor
 
